@@ -1,0 +1,6 @@
+data:
+  object_folder: "/home/alexm/Projects/AMR_Semesterprojekt/object_to_lidar_pointcloud/scan_objects"
+  save_folder: "/home/alexm/Projects/AMR_Semesterprojekt/object_to_lidar_pointcloud/pointcloud_files"
+
+scan_settings:
+  num_scans: 5

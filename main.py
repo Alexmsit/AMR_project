@@ -38,7 +38,6 @@ def main():
 
     # create scanner object and move it away from the origin of the scene
     scanner = bpy.data.objects["Camera"]
-    scanner.location = (5,0,0)
 
     # for each object which should be scanned:
     for file_path in obj_files:

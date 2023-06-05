@@ -38,28 +38,23 @@ def main():
 
     # create scanner object and move it away from the origin of the scene
     scanner = bpy.data.objects["Camera"]
+    scanner.location = config["scan_settings"]["scanner_location"]
 
     # for each object which should be scanned:
     for file_path in obj_files:
 
-        # import object which sould be scanned into the scene
+        # import object into the scene and place it in the center
         scan_object = bpy.ops.import_scene.obj(filepath=file_path)
-        scan_object_ = bpy.context.selected_objects[0]
+        scan_object = bpy.context.selected_objects[0]
+        scan_object.location = config["scan_settings"]["object_location"]
+        
+        # construct filename of lidar scan
+        _, file = os.path.split(file_path)
+        file_name, _ = file.split(".")
+        file = file_name + ".pcd"
 
         # for each scan:
-        for i in range(num_scans):
-
-            # get file
-            _, file = os.path.split(file_path)
-
-            # get name and extension of file
-            file_name, file_extension = file.split(".")
-
-            # add running number to filename because there are multiple scans of the same object
-            file_name = file_name + str(i).zfill(4)
-
-            # reconstruct file with extension in pointcloud format
-            file = file_name + ".pcd"
+        for i in range(num_scans):            
 
             # construct path where the scan is saved
             file_save_path = os.path.join(save_path, file)
@@ -70,20 +65,37 @@ def main():
             z_rot = random.randrange(0, 360)
 
             # rotate object randomly
-            scan_object_.rotation_euler[0] = x_rot
-            scan_object_.rotation_euler[1] = y_rot
-            scan_object_.rotation_euler[2] = z_rot
+            scan_object.rotation_euler[0] = x_rot
+            scan_object.rotation_euler[1] = y_rot
+            scan_object.rotation_euler[2] = z_rot
                 
             # Scan the scene and save the results
             blensor.blendodyne.scan_advanced(scanner, rotation_speed = 10.0, 
-                                            simulation_fps=24, angle_resolution = 0.1728, 
-                                            max_distance = 120, evd_file= file_save_path,
-                                            noise_mu=0.0, noise_sigma=0.03, start_angle = 0.0, 
-                                            end_angle = 360.0, evd_last_scan=True, 
-                                            add_blender_mesh = False, 
-                                            add_noisy_blender_mesh = False)
+                                                    simulation_fps=24, 
+                                                    angle_resolution = 0.1728, 
+                                                    max_distance = 120,
+                                                    evd_file= file_save_path,
+                                                    noise_mu=0.0,
+                                                    noise_sigma=0.03, 
+                                                    start_angle = 0.0, 
+                                                    end_angle = 360.0, 
+                                                    evd_last_scan=False, 
+                                                    add_blender_mesh = False, 
+                                                    add_noisy_blender_mesh = False)
             
+            # rename files because there are multiple scans
+            bin_name_raw = save_path + "/" + file_name
+            pcd_name_raw = save_path + "/" + file_name + "00000.pcd"
+            pcd_name_noisy = save_path + "/" + file_name + "_noisy00000.pcd"
 
+            scan_number = str(i).zfill(4)
+
+            file_name_raw_conv = pcd_name_raw.replace("00000", scan_number)
+            file_name_noisy_conv = pcd_name_noisy.replace("00000", scan_number)
+
+            os.remove(bin_name_raw)
+            os.rename(pcd_name_raw, file_name_raw_conv)
+            os.rename(pcd_name_noisy, file_name_noisy_conv)
 
     # quit blensor
     bpy.ops.wm.quit_blender()

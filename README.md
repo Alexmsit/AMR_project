@@ -9,10 +9,40 @@
     chmod +x Blender-x86_64.AppImage
     ```
 2. Place one or more object files inside the scan_objects folder. 
-3. Modify the datapaths and scan settings within `config.yaml`.
+3. Modify the settings within the `config.yaml` as shown below.
 
 
 <hr>
+
+
+## Config
+
+The config file `config.yaml` contains all settings regarding the scans itself and the data paths.
+The structure of the config file with all possible settings is shown below.
+
+data:
+- object_folder: Absolute path to the folder which contains the objects.
+- save_folder: Absolute path to the folder where the scan files are saved.
+
+scan_settings:
+    - scanner: Name of the scanner which will be used. Either "Velodyne-HDL-64E2" or "Velodyne-HDL-32E".
+    - num_scans: Number of scans which are conducted for a single object.
+
+custom_scan_settings:
+    - use_custom: False
+    - rotation_speed: 10
+  simulation_fps: 24
+  angle_resolution: 0.1728
+  max_distance: 120
+  noise_mu: 0.0
+  noise_sigma: 0.3
+  start_angle: 0.0
+  end_angle: 360.0
+  evd_last_scan: False
+  add_blender_mesh: False
+  add_noisy_blender_mesh: False
+
+
 
 ## Usage
 

@@ -3,6 +3,23 @@ data:
   save_folder: "/home/student/PERSISTENT/AMR_project/pointcloud_files"
 
 scan_settings:
+  scanner: "Velodyne-HDL-64E2"
   num_scans: 1
   object_location: [0,0,0]
   scanner_location: [0,-6,1]
+
+custom_scan_settings:
+  use_custom: False
+  rotation_speed: 10
+  simulation_fps: 24
+  angle_resolution: 0.1728
+  max_distance: 120
+  noise_mu: 0.0
+  noise_sigma: 0.3
+  start_angle: 0.0
+  end_angle: 360.0
+  evd_last_scan: False
+  add_blender_mesh: False
+  add_noisy_blender_mesh: False
+  
+  

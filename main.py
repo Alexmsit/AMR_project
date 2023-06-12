@@ -21,6 +21,7 @@ def main():
     data_path = config["data"]["object_folder"]
     save_path = config["data"]["save_folder"]
     
+    scanner_model = config["scan_settings"]["scanner"]
     num_scans = config["scan_settings"]["num_scans"]
 
     if not os.path.isdir(save_path):
@@ -39,6 +40,7 @@ def main():
     # create scanner object and move it away from the origin of the scene
     scanner = bpy.data.objects["Camera"]
     scanner.location = config["scan_settings"]["scanner_location"]
+    scanner.velodyne_model = scanner_model
 
     # for each object which should be scanned:
     for file_path in obj_files:
@@ -72,7 +74,7 @@ def main():
             # Scan the scene and save the results
             blensor.blendodyne.scan_advanced(scanner, rotation_speed = 10.0, 
                                                     simulation_fps=24, 
-                                                    angle_resolution = 0.1728, 
+                                                    angle_resolution = 100, 
                                                     max_distance = 120,
                                                     evd_file= file_save_path,
                                                     noise_mu=0.0,

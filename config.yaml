@@ -1,14 +1,14 @@
 data:
-  object_folder: "/home/student/PERSISTENT/AMR_project/scan_objects"
-  save_folder: "/home/student/PERSISTENT/AMR_project/pointcloud_files"
+  object_folder: "/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/scan_objects"
+  save_folder: "/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/pointcloud_files"
 
 scan_settings:
-  scanner: "Velodyne-HDL-64E2"
-  num_scans: 1
+  scanner: "hdl64e2"
+  num_scans: 2
   object_location: [0,0,0]
   scanner_location: [0,-6,1]
 
-custom_scan_settings:
+custom_scan_settings: # check README for more information about custom settings
   use_custom: False
   rotation_speed: 10
   simulation_fps: 24

@@ -4,6 +4,10 @@
 ## Setup
 
 1. Download the modified Blensor App Image from [here](https://drive.google.com/file/d/1liuBE2CTji_6wocjWjEGQ2Uy11DPg7fL/view?usp=sharing) and place it inside the root directory of this repository.
+2. Give permission to execute the AppImage with the command below. 
+    ```
+    chmod +x Blender-x86_64.AppImage
+    ```
 2. Place one or more object files inside the scan_objects folder. 
 3. Modify the datapaths and scan settings within `config.yaml`.
 

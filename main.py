@@ -12,18 +12,20 @@ from math import *
 import blensor
 
 
+
 def main():
 
     # load config
     config = yaml.safe_load(open("./config.yaml", "r"))
 
-    # get paths for loading objects and saving lidar scans
+    # paths for loading objects and saving lidar scans
     data_path = config["data"]["object_folder"]
     save_path = config["data"]["save_folder"]
     
-    scanner_model = config["scan_settings"]["scanner"]
+    # number of scans
     num_scans = config["scan_settings"]["num_scans"]
 
+    # create save directory
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
     
@@ -32,15 +34,22 @@ def main():
     obj_files.extend(glob.glob(data_path + "/*.obj"))
     obj_files.sort()
 
+    # create scanner
+    scanner = bpy.data.objects["Camera"]
+    scanner.scan_type = 'tof'
+
+    # translate and rotate scanner according to real setup (angles are transformed from deg to rad)
+    scanner.location = config["scan_settings"]["scanner_location"]
+    scanner_rotation = config['scan_settings']['scanner_rotation']
+    for i, deg_value in enumerate(scanner_rotation):
+        rad_value = (deg_value * pi) / 180
+        scanner_rotation[i] = rad_value
+    scanner.rotation_euler = scanner_rotation
+
     # remove the cube object which is placed within the scene per default
     bpy.ops.object.select_all(action='DESELECT')
     bpy.data.objects['Cube'].select = True
     bpy.ops.object.delete()
-
-    # create scanner object and move it away from the origin of the scene
-    scanner = bpy.data.objects["Camera"]
-    scanner.location = config["scan_settings"]["scanner_location"]
-    scanner.velodyne_model = scanner_model
 
     # for each object which should be scanned:
     for file_path in obj_files:
@@ -71,19 +80,24 @@ def main():
             scan_object.rotation_euler[1] = y_rot
             scan_object.rotation_euler[2] = z_rot
                 
-            # Scan the scene and save the results
-            blensor.blendodyne.scan_advanced(scanner, rotation_speed = 10.0, 
-                                                    simulation_fps=24, 
-                                                    angle_resolution = 100, 
-                                                    max_distance = 120,
-                                                    evd_file= file_save_path,
-                                                    noise_mu=0.0,
-                                                    noise_sigma=0.03, 
-                                                    start_angle = 0.0, 
-                                                    end_angle = 360.0, 
-                                                    evd_last_scan=False, 
-                                                    add_blender_mesh = False, 
-                                                    add_noisy_blender_mesh = False)
+            # conduct scan
+            blensor.tof.scan_advanced(scanner, 
+                                        max_distance=config['azure_kinect_settings']['max_scan_dist'],
+                                        evd_file=file_save_path,
+                                        add_blender_mesh=False,
+                                        add_noisy_blender_mesh=False,
+                                        tof_res_x= config['azure_kinect_settings']['x_res'],
+                                        tof_res_y=config['azure_kinect_settings']['y_res'],
+                                        lens_angle_w=config['azure_kinect_settings']['hor_fov'],
+                                        lens_angle_h=config['azure_kinect_settings']['ver_fov'],
+                                        flength=config['azure_kinect_settings']['focal_length'],
+                                        evd_last_scan=False,
+                                        noise_mu=config['azure_kinect_settings']['noise_center'],
+                                        noise_sigma=config['azure_kinect_settings']['noise_sigma'],
+                                        timestamp = 0.0,
+                                        backfolding=False
+                                        )
+
             
             # rename files because there are multiple scans
             bin_name_raw = save_path + "/" + file_name

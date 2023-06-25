@@ -8,39 +8,44 @@
     ```
     chmod +x Blender-x86_64.AppImage
     ```
-2. Place one or more object files inside the scan_objects folder. 
+2. Place the object file inside the scan_objects folder. 
 3. Modify the settings within the `config.yaml` as shown below.
 
 
 <hr>
 
-
 ## Config
 
 The config file `config.yaml` contains all settings regarding the scans itself and the data paths.
-The structure of the config file with all possible settings is shown below.
+The settings need to be adapted to your system and real world setup as described below:
+
+First the paths within the **data** section need to be adapted to your system.
+Next the translation and rotation of the sensor, as well as the location of the object need to be configured within the **scan_settings** section.
+These values should match the real world setup in which the system is used.
+At last the number of scans needs to be configured.
+
+The **azure_kinect_settings** section does not need to be modified, but provides information about the configuration of the sensor which could be useful for debugging.
+
 
 **data**:
-- object_folder: Absolute path to the folder which contains the objects.
+- object_folder: Absolute path to the folder which contains the object.
 - save_folder: Absolute path to the folder where the scan files are saved.
 
 **scan_settings**:
-- scanner: Name of the scanner which will be used, either "hdl64e2" or "hdl32e".
-- num_scans: Number of scans which are conducted for a single object.
+- scanner_location: List with the x, y and z position of the scanner in meter.
+- scanner_rotation: List with the rotation of the scanner along the x, y and z axis in degree.
+- object_location: List with the x, y and z position of the object in meter.
+- num_scans: Int Number of scans which are conducted per object.
 
-**custom_scan_settings**:
-- use_custom: Either "True" or "False", determines if the custom scan settings will be used.
-- rotation_speed: Speed of the rotation of the lidar scanner in Hz.
-- simulation_fps: Speed of the simulation in FPS.
-- angle_resolution: Angular (vertical) resolution of the scanner.
-- max_distance: Maximum distance which the lidar scanner sees.
-- noise_mu: Center of the noise.
-- noise_sigma: Sigma of the noise.
-- start_angle: Starting angle of the lidar scan.
-- end_angle: Ending angle of the lidar scan.
-- evd_last_scan: ?
-- add_blender_mesh: ?
-- add_noisy_blender_mesh: ?
+**azure_kinect_settings**
+- x_res: Resolution of the sensor in x-direction in pixel.
+- y_res: Resolution of the sensor in y-direction in pixel.
+- hor_fov: Horizontal field of view in degree.
+- ver_fov: Vertical field of view in degree.
+- focal_length: Focal length of the sensor.
+- max_scan_dist: Maximum distance which the scanner can see.
+- noise_center: Expected value (mu) of the added noise.
+- noise_sigma: Standard Deviation (sigma) of the added noise.
 
 <hr>
 

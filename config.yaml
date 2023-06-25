@@ -1,25 +1,21 @@
 data:
-  object_folder: "/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/scan_objects"
-  save_folder: "/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/pointcloud_files"
+  object_folder: '/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/scan_objects'
+  save_folder: '/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/pointcloud_files'
 
 scan_settings:
-  scanner: "hdl64e2"
-  num_scans: 2
+  scanner_location: [0,-3.5,1]
+  scanner_rotation: [70,0,0]
   object_location: [0,0,0]
-  scanner_location: [0,-6,1]
+  num_scans: 5
 
-custom_scan_settings: # check README for more information about custom settings
-  use_custom: False
-  rotation_speed: 10
-  simulation_fps: 24
-  angle_resolution: 0.1728
-  max_distance: 120
-  noise_mu: 0.0
-  noise_sigma: 0.3
-  start_angle: 0.0
-  end_angle: 360.0
-  evd_last_scan: False
-  add_blender_mesh: False
-  add_noisy_blender_mesh: False
+azure_kinect_settings:
+  x_res: 640
+  y_res: 576
+  hor_fov: 75
+  ver_fov: 65
+  focal_length: 1.8
+  max_scan_dist: 3.86
+  noise_center: 0
+  noise_sigma: 0
   
   

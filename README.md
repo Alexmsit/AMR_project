@@ -1,9 +1,15 @@
 # AMR Projekt: Blensor-Pipeline zur Generierung von Trainingsdaten für 6D-Pose-Estimation
 
+## Info
+
+This repository containes the code for the AMR semester project `Erzeugen einer Blensor-Pipeline zur Generierung von Trainingsdaten für 6D-Pose-Estimation`.
+The goal of this project was to automate the generation of synthetic training data for 6d-pose-estimation using Blensor. Therefore the Azure Kinect DK was implemented in Blensor and a small pipeline was built to automate it.
+
+<hr>
 
 ## Setup
 
-1. Download the modified Blensor App Image from [here](https://drive.google.com/file/d/1liuBE2CTji_6wocjWjEGQ2Uy11DPg7fL/view?usp=sharing) and place it inside the root directory of this repository.
+1. Download the modified Blensor App Image and place it inside the root directory of this repository.
 2. Give permission to execute the AppImage with the command below. 
     ```
     chmod +x Blender-x86_64.AppImage
@@ -27,11 +33,11 @@ At last the number of scans needs to be configured.
 The **azure_kinect_settings** section does not need to be modified, but provides information about the configuration of the sensor which could be useful for debugging.
 
 
-**data**:
+**data**
 - object_folder: Absolute path to the folder which contains the object.
 - save_folder: Absolute path to the folder where the scan files are saved.
 
-**scan_settings**:
+**scan_settings**
 - scanner_location: List with the x, y and z position of the scanner in meter.
 - scanner_rotation: List with the rotation of the scanner along the x, y and z axis in degree.
 - object_location: List with the x, y and z position of the object in meter.
@@ -57,9 +63,11 @@ The command below starts Blensor and runs the `main.py` script.
 ./Blender-x86_64.AppImage -P main.py
 ```
 
-The script scans the object folder and saves all paths to the object files which were found. Then the first object is placed into the Blensor scene and rotated randomly along all three axis. After rotation, the simulated lidar scan is conducted according to the settings within the config file. This process of rotation and scanning is repeated until the specified number of scans is reached, then the next object is placed into the scene for scanning.
+The script scans the object folder for the object file, loads it and places it into the Blensor scene. The object is then rotated randomly along all three axis. After rotation, the simulated Azure Kinect Scan is conducted according to the settings within the config file. 
 
-The simulated lidar scans are saved in .pcd format within the pointcloud_files folder.
+This process of rotation and scanning is repeated until the specified number of scans is reached, then Blensor should quit automatically.
+
+The simulated Azure Kinect Pointcloud data is saved in .pcd format, while the corresponding Ground Truth Labels are saved in .txt format. For more information about the file format see the section below.
 
 
 <hr>
@@ -96,11 +104,12 @@ Each tuple contains the following data:
 
 <hr>
 
-## Add modules to the Appimage
+## Modification of the AppImage
 
-The Appimage which is used in this project contains a modified version of blensor which has additional python modules.
-For future projects it could be necessary to add more python modules.
-Therefore the steps to modify the Appimage are shown below:
+The Appimage which is used in this project is based on the [original Blensor Appimage](https://www.blensor.org/pages/downloads.html) and just contains a few more python modules.
+For future works on this project it could be necessary to add more python modules.
+The steps to achieve this are described below:
+
 
 **1. Extract the Appimage**
 
@@ -113,7 +122,7 @@ This command will generate a folder "squashfs-root" with the extracted Appimage 
 
 **2. Add python modules**
 
-Next the python modules need to be placed inside the following folder within the extracted image:
+Next the python modules need to be placed inside the following folder within the extracted Appimage.
 
 ```
 /PATH/TO/YOUR/squashfs-root/2.79/python/lib
@@ -121,10 +130,11 @@ Next the python modules need to be placed inside the following folder within the
 
 **3. Rebuild the Appimage**
 
-Lastly the Appimage needs to be rebuild with the command below:
+Lastly, the Appimage needs to be rebuild with the command below.
+To execute the command the [appimagetool](https://github.com/AppImage/AppImageKit/releases) needs to be downloaded first.
 
 ```
-TODO
+./appimagetool-x86_64.AppImage -v /PATH/TO/YOUR/squashfs-root
 ```
 
 

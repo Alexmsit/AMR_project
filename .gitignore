@@ -1,3 +1,6 @@
+# ignore appimage and appimage tool
 Blender-x86_64.AppImage
+appimagetool-x86_64.AppImage
 
+# ignore pointcloud folder
 /pointcloud_files

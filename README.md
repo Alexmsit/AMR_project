@@ -94,3 +94,37 @@ Each tuple contains the following data:
 - blue (double)
 - object id (double)
 
+<hr>
+
+## Add modules to the Appimage
+
+The Appimage which is used in this project contains a modified version of blensor which has additional python modules.
+For future projects it could be necessary to add more python modules.
+Therefore the steps to modify the Appimage are shown below:
+
+**1. Extract the Appimage**
+
+First the Appimage needs to be extracted with the following command.
+This command will generate a folder "squashfs-root" with the extracted Appimage data next to the original Appimage.
+
+```
+/PATH/TO/YOUR/Blender-x86_64.AppImage --appimage-extract
+```
+
+**2. Add python modules**
+
+Next the python modules need to be placed inside the following folder within the extracted image:
+
+```
+/PATH/TO/YOUR/squashfs-root/2.79/python/lib
+```
+
+**3. Rebuild the Appimage**
+
+Lastly the Appimage needs to be rebuild with the command below:
+
+```
+TODO
+```
+
+

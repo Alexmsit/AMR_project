@@ -98,7 +98,7 @@ def main():
                                         backfolding=False
                                         )
 
-            
+            """
             # rename files because there are multiple scans
             bin_name_raw = save_path + "/" + file_name
             pcd_name_raw = save_path + "/" + file_name + "00000.pcd"
@@ -112,6 +112,7 @@ def main():
             os.remove(bin_name_raw)
             os.rename(pcd_name_raw, file_name_raw_conv)
             os.rename(pcd_name_noisy, file_name_noisy_conv)
+            """
 
     # quit blensor
     bpy.ops.wm.quit_blender()

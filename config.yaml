@@ -1,6 +1,6 @@
 data:
-  object_folder: '/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/scan_objects'
-  save_folder: '/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/pointcloud_files'
+  object_folder: '/home/student/PERSISTENT/AMR_project/scan_objects'
+  save_folder: '/home/student/PERSISTENT/AMR_project/pointcloud_files'
 
 scan_settings:
   scanner_location: [0,-3.5,1]

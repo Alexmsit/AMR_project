@@ -1,90 +1,101 @@
-# AMR Projekt: Blensor-Pipeline zur Generierung von Trainingsdaten für 6D-Pose-Estimation
+# **AMR Projekt: Blensor-Pipeline zur Generierung von Trainingsdaten für 6D-Pose-Estimation**
 
-## Info
+## **1. Info**
 
-This repository containes the code for the AMR semester project `Erzeugen einer Blensor-Pipeline zur Generierung von Trainingsdaten für 6D-Pose-Estimation`.
-The goal of this project was to automate the generation of synthetic training data for 6d-pose-estimation using Blensor. Therefore the Azure Kinect DK was implemented in Blensor and a small pipeline was built to automate it.
-
-<hr>
-
-## Setup
-
-1. Download the modified Blensor App Image and place it inside the root directory of this repository.
-2. Give permission to execute the AppImage with the command below. 
-    ```
-    chmod +x Blender-x86_64.AppImage
-    ```
-2. Place the object file inside the scan_objects folder. 
-3. Modify the settings within the `config.yaml` as shown below.
-
+Dieses Repository enthält den Code für das AMR-Semesterprojekt `Erzeugen einer Blensor-Pipeline zur Generierung von Trainingsdaten für 6D-Pose-Estimation`.
+Das Ziel dieses Projektes ist es, das Erzeugen von Trainingsdaten für die 6D-Pose-Estimation zu automatisieren. 
+Die Umsetzung erfolgte mit dem 3D-Grafik-Programm Blensor, in welchem der Azure Kinect Sensor zunächst implementiert und dessen Ausgabe anschließend simuliert wurde.
 
 <hr>
 
-## Config
+## **2. Setup**
 
-The config file `config.yaml` contains all settings regarding the scans itself and the data paths.
-The settings need to be adapted to your system and real world setup as described below:
+1\. Stellen Sie sicher, dass sich das modifizierte Blensor AppImage `Blender-x86_64.AppImage` in diesem Repository befindet.
 
-First the paths within the **data** section need to be adapted to your system.
-Next the translation and rotation of the sensor, as well as the location of the object need to be configured within the **scan_settings** section.
-These values should match the real world setup in which the system is used.
-At last the number of scans needs to be configured.
+2\. Geben Sie mit dem nachfolgendem Befehl die Erlaubnis das AppImage auszuführen:
+```
+chmod +x Blender-x86_64.AppImage
+```
+3\. Ersetzen Sie das Demonstrationsobjekt im `scan_objects` Ordner durch ihr eigenes Objekt. Das Objekt muss dabei im .obj-Format vorliegen.
 
-The **azure_kinect_settings** section does not need to be modified, but provides information about the configuration of the sensor which could be useful for debugging.
+4\. Passen Sie die Einstellungen innerhalb der `config.yaml` gemäß der nachfolgenden Beschreibung an.
 
+<hr>
 
-**data**
-- object_folder: Absolute path to the folder which contains the object.
-- save_folder: Absolute path to the folder where the scan files are saved.
+## **3. Konfiguration**
+
+Die Konfigurationsdatei `config.yaml` enthält alle Einstellungen zu den Scans.
+Die Einstellungen müssen, wie unten beschrieben, an den realen Versuchsaufbau angepasst werden:
+
+Zunächst muss dafür die Position und die Rotation des simulierten Azure Kinect Scanners im Abschnitt **scan_settings** konfiguriert werden.
+Die Position stellt dabei den Abstand zum Ursprung der Blensor Szene dar. Die Rotation beschreibt, wie der Sensor ausgerichtet ist.
+Das Objekt, welches gescannt werden soll, wird dann im Ursprung der Blensor Szene eingefügt und innerhalb eines definierten Bereichs zufällig verschoben und rotiert. Der Bereich, in welchem das Objekt zufällig platziert werden kann, muss ebenfalls in diesem Abschnitt konfiguriert werden.
+Weiterhin muss hier festgelegt werden, wieviele Scans durchgeführt werden.
+
+Der Abschnitt **azure_kinect_settings** muss nicht geändert werden, liefert aber Informationen über die Konfiguration des Sensors, die für die Fehlersuche nützlich sein können.
+
 
 **scan_settings**
-- scanner_location: List with the x, y and z position of the scanner in meter.
-- scanner_rotation: List with the rotation of the scanner along the x, y and z axis in degree.
-- object_location: List with the x, y and z position of the object in meter.
-- num_scans: Int Number of scans which are conducted per object.
+- scanner_location: Liste mit den x, y und z-Positionen des Azure Kinect Scanners in Metern.
+- scanner_rotation: Liste mit den x, y und z-Rotationen des Azure Kinect Scanners in Metern.
+- object_location_area: Liste mit den maximalen Abweichungen vom Ursprung. (Default: +- 0,25m)
+- num_scans: Anzahl der Scans, welche für das Objekt durchgeführt werden.
 
 **azure_kinect_settings**
-- x_res: Resolution of the sensor in x-direction in pixel.
-- y_res: Resolution of the sensor in y-direction in pixel.
-- hor_fov: Horizontal field of view in degree.
-- ver_fov: Vertical field of view in degree.
-- focal_length: Focal length of the sensor.
-- max_scan_dist: Maximum distance which the scanner can see.
-- noise_center: Expected value (mu) of the added noise.
-- noise_sigma: Standard Deviation (sigma) of the added noise.
+- x_res: Auflösung des Sensors in x-Richtung in Pixeln.
+- y_res: Auflösung des Sensors in y-Richtung in Pixeln.
+- focal_length: Brennweite in Millimetern.
+- max_scan_dist: Maximale Distanz, in welcher Punkte erkannt werden können in Metern.
+- min_scan_dist: Minimale Distanz, in welcher Punkte erkannt werden können in Metern.
+- inlier_distance: 
+- noise_center: Erwartungswert des Gauß'schen Rauschens.
+- noise_sigma: Standardabweichung des Gauß'schen Rauschens.
+- noise_scale: Stärke des Rauschens.
+- noise_smoothness: Glättung des Rauschens.
+- reflectivity_distance: Objekte, welche näher als die reflectivity_distance sind, sind unabhängig von ihrer Reflektivität.
+- reflectivity_limit: Mindest-Reflektivität für Objekte, welche reflectivity_distance besitzen.
+- reflectivity_slope: Steigung der reflectivity_limit Kurve.
 
 <hr>
 
-## Usage
+## **4. Anwendung**
 
-The command below starts Blensor and runs the `main.py` script.
+Der folgende Befehl startet Blensor und führt das `main.py` script aus.
 
 ```
 ./Blender-x86_64.AppImage -P main.py
 ```
 
-The script scans the object folder for the object file, loads it and places it into the Blensor scene. The object is then rotated randomly along all three axis. After rotation, the simulated Azure Kinect Scan is conducted according to the settings within the config file. 
+Dieses Script lädt das Objekt aus dem `scan_objects` Ordner und fügt es in der Blensor Szene ein. Das Objekt wird dann zufällig um alle drei Achsen rotiert und zufällig innerhalb des vorher definierten Bereichs verschoben. Nachdem das Objekt verschoben und rotiert wurde, wird der Scan durchgeführt.
 
-This process of rotation and scanning is repeated until the specified number of scans is reached, then Blensor should quit automatically.
+Nach Abschluss des Scans wiederholt sich der Prozess von Rotation, Translation und Scan bis die spezifizierte Anzahl an Scans erreicht ist.
 
-The simulated Azure Kinect Pointcloud data is saved in .pcd format, while the corresponding Ground Truth Labels are saved in .txt format. For more information about the file format see the section below.
+Die Scans der simulierten Azure Kinect werden im .pcd Format gespeichert, während die zugehörigen Ground Truth Labels in .txt Format gespeichert werden.
+Mehr Informationen über die Dateiformate sind im nächsten Abschnitt zu finden.
 
 
 <hr>
 
-## File Format
+## **5. Datei Formate**
 
-<p>For each scan the following two files are generated:</p>
+<p>Für jeden Scan werden im `training_data/pointclouds` Ordner die folgenden beiden Dateien erzeugt:</p>
 
-    1. OBJNAME_XXXX.pcd          Contains the simulated lidar points without noise
+    1. OBJNAME_XXXX.pcd          Enthält den simulierten Azure Kinect Scan.
 
-    2. OBJNAME_noisy_XXXX.pcd    Contains the simulated lidar points with noise
+    2. OBJNAME_noisy_XXXX.pcd    Enthält den simulierten Azure Kinect Scan mit überlagertem Rauschen.
 
-Thereby OBJNAME stands for the name of the object and XXXX stands for the number of the scan.
+<p>Weiterhin wird für jeden Scan im 'training_data/labels' Ordner das zugehörige Ground-Truth-Label erzeugt:</p>
 
-Each file consists of one integer(N) and N*15 tuples which represent the laser echos. The file ends with an integer that has the value -1.
+    1. OBJNAME_XXXX.txt          Enthält die Position sowie die Rotation des Objektes.
 
-Each tuple contains the following data:
+Dabei steht OBJNAME für den Namen des Objektes und XXXX steht für die Nummer des Scans.
+
+**Aufbau der Scan-Dateien**
+
+Jede Scan-Datei besteht aus einem Integer(N) für die Anzahl der Laser-Echos und N*15 Tuples, welche die Daten der einzelnen Laserechos beinhalten.
+Die Datei endet mit einer Integer Zahl mit dem Wert -1.
+
+Jedes Tuple beinhaltet dabei die folgenden Daten:
 
 - timestamp (double)
 - yaw (double)
@@ -102,36 +113,57 @@ Each tuple contains the following data:
 - blue (double)
 - object id (double)
 
+**Aufbau der Ground-Truth-Dateien**
+
+Jede Ground-Truth-Datei besteht aus 6 Zeilen, welche die folgenden Daten beinhalten:
+
+- x-position (float)
+- y-position (float)
+- z-position (float)
+- x-rotation (int)
+- y-rotation (int)
+- z-rotation (int)
+
+Die Positions- und Rotationsdaten beziehen sich dabei auf das Kamera-Koordinatensystem (x:rechts, y:vorne, z:oben).
+
 <hr>
 
-## Modification of the AppImage
+## **6. Nützliche Funktionen** 
 
-The Appimage which is used in this project is based on the [original Blensor Appimage](https://www.blensor.org/pages/downloads.html) and just contains a few more python modules.
-For future works on this project it could be necessary to add more python modules.
-The steps to achieve this are described below:
+### **6.1 Visualisierung der Punktewolke**
+
+Um den Output des simulierten Azure Kinect Scanners zu visualisieren existieren verschiedene Tools, wie beispielsweise der [PCD-Online-Viewer](https://imagetostl.com/de/pcd-online-ansehen).
+
+### **6.2 Modifikation des AppImages**
+
+Das AppImage, welches in diesem Projekt benutzt wird, basiert auf dem [originalen Blensor Appimage](https://www.blensor.org/pages/downloads.html) und beinhaltet zusätzliche Python-Module. Für zukünftige Arbeiten an diesem Projekt kann es unter Umständen nötig sein, dem AppImage weitere Module hinzuzufügen. 
+Dies kann mit nachfolgend beschriebenen Schritten durchgeführt werden:
 
 
-**1. Extract the Appimage**
+**1. Entpacken des AppImages**
 
-First the Appimage needs to be extracted with the following command.
-This command will generate a folder "squashfs-root" with the extracted Appimage data next to the original Appimage.
+Zunächst muss das AppImage mit nachfolgendem Befehl entpackt werden.
+Dieser Befehl erzeugt einen Ordner "squashfs-root" neben dem originalen AppImage.
+Dieser Ordner enthält alle Daten des AppImages.
 
 ```
 /PATH/TO/YOUR/Blender-x86_64.AppImage --appimage-extract
 ```
 
-**2. Add python modules**
+**2. Einfügen von Python Modulen**
 
-Next the python modules need to be placed inside the following folder within the extracted Appimage.
+Im nächsten Schritt müssen die benötigten Python-Module in das entpackte AppImage eingefügt werden.
+Der Unterordner, welcher die Python Module enthält, ist dieser:
 
 ```
 /PATH/TO/YOUR/squashfs-root/2.79/python/lib
 ```
 
-**3. Rebuild the Appimage**
+**3. Zusammensetzen des AppImages**
 
-Lastly, the Appimage needs to be rebuild with the command below.
-To execute the command the [appimagetool](https://github.com/AppImage/AppImageKit/releases) needs to be downloaded first.
+Zuletzt muss das AppImage mit dem folgenden Befehl wieder zusammen gesetzt werden.
+Um den Befehl ausführen zu können muss zunächst das kostenlose [appimagetool](https://github.com/AppImage/AppImageKit/releases) heruntergeladen werden.
+Andere Tools sollten ebenfalls möglich sein, wurden allerdings nicht getestet.
 
 ```
 ./appimagetool-x86_64.AppImage -v /PATH/TO/YOUR/squashfs-root

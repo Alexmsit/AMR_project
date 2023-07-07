@@ -1,21 +1,25 @@
-data:
-  object_folder: '/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/scan_objects'
-  save_folder: '/home/alexm/Projects/AMR_Semesterprojekt/AMR_project/training_data'
-
 scan_settings:
-  scanner_location: [0,-3.5,1]
-  scanner_rotation: [70,0,0]
-  object_location: [0,0,0]
+  scanner_location: [0, -2.5, 1.5]
+  scanner_rotation: [60, 0, 0]
+  object_location_area: [0.25, 0.25, 0]
   num_scans: 5
 
 azure_kinect_settings:
   x_res: 640
   y_res: 576
-  hor_fov: 75
-  ver_fov: 65
   focal_length: 1.8
   max_scan_dist: 3.86
-  noise_center: 0
-  noise_sigma: 0
+  min_scan_dist: 0.0
+  inlier_distance: 0.05
+  noise_center: 0.0
+  noise_sigma: 0.0
+  noise_scale: 0.25
+  noise_smoothness: 1.5
+  reflectivity_distance: 0.0
+  reflectivity_limit: 0.01
+  reflectivity_slope: 0.16
+  
+  
+
   
   

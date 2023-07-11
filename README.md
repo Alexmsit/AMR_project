@@ -2,9 +2,9 @@
 
 ## **1. Info**
 
-Dieses Repository enthält den Code für das AMR-Semesterprojekt `Erzeugen einer Blensor-Pipeline zur Generierung von Trainingsdaten für 6D-Pose-Estimation`.
+Dieses Repository enthält den Code für das AMR-Semesterprojekt `Aufbau einer Pipeline zur Generierung von synthetischen Trainingsdaten für 6D-Pose-Estimation`.
 Das Ziel dieses Projektes ist es, das Erzeugen von Trainingsdaten für die 6D-Pose-Estimation zu automatisieren. 
-Die Umsetzung erfolgte mit dem 3D-Grafik-Programm Blensor, in welchem der Azure Kinect Sensor zunächst implementiert und dessen Ausgabe anschließend simuliert wurde.
+Die Umsetzung erfolgte unter Verwendung von Blensor über die Python-API.
 
 <hr>
 
@@ -16,7 +16,7 @@ Die Umsetzung erfolgte mit dem 3D-Grafik-Programm Blensor, in welchem der Azure 
 ```
 chmod +x Blender-x86_64.AppImage
 ```
-3\. Ersetzen Sie das Demonstrationsobjekt im `scan_objects` Ordner durch ihr eigenes Objekt. Das Objekt muss dabei im .obj-Format vorliegen.
+3\. Ersetzen Sie das Beispiel-Objekt im `scan_objects` Ordner durch ihr eigenes Objekt. Das Objekt muss dabei im .obj-Format vorliegen.
 
 4\. Passen Sie die Einstellungen innerhalb der `config.yaml` gemäß der nachfolgenden Beschreibung an.
 
@@ -29,7 +29,7 @@ Die Einstellungen müssen, wie unten beschrieben, an den realen Versuchsaufbau a
 
 Zunächst muss dafür die Position und die Rotation des simulierten Azure Kinect Scanners im Abschnitt **scan_settings** konfiguriert werden.
 Die Position stellt dabei den Abstand zum Ursprung der Blensor Szene dar. Die Rotation beschreibt, wie der Sensor ausgerichtet ist.
-Das Objekt, welches gescannt werden soll, wird dann im Ursprung der Blensor Szene eingefügt und innerhalb eines definierten Bereichs zufällig verschoben und rotiert. Der Bereich, in welchem das Objekt zufällig platziert werden kann, muss ebenfalls in diesem Abschnitt konfiguriert werden.
+Das Objekt, welches gescannt werden soll, wird dann im Ursprung der Blensor Szene eingefügt und innerhalb einer definierten Fläche zufällig verschoben und rotiert. Der Bereich, in welchem das Objekt zufällig platziert werden kann, muss ebenfalls in diesem Abschnitt konfiguriert werden.
 Weiterhin muss hier festgelegt werden, wieviele Scans durchgeführt werden.
 
 Der Abschnitt **azure_kinect_settings** muss nicht geändert werden, liefert aber Informationen über die Konfiguration des Sensors, die für die Fehlersuche nützlich sein können.
@@ -38,7 +38,7 @@ Der Abschnitt **azure_kinect_settings** muss nicht geändert werden, liefert abe
 **scan_settings**
 - scanner_location: Liste mit den x, y und z-Positionen des Azure Kinect Scanners in Metern.
 - scanner_rotation: Liste mit den x, y und z-Rotationen des Azure Kinect Scanners in Metern.
-- object_location_area: Liste mit den maximalen Abweichungen vom Ursprung. (Default: +- 0,25m)
+- object_location_area: Liste mit den maximalen Abweichungen vom Mittelpunkt der Fläche, auf welcher sich das Objekt befindet. (Default: +- 0,25m)
 - num_scans: Anzahl der Scans, welche für das Objekt durchgeführt werden.
 
 **azure_kinect_settings**
@@ -60,10 +60,11 @@ Der Abschnitt **azure_kinect_settings** muss nicht geändert werden, liefert abe
 
 ## **4. Anwendung**
 
-Der folgende Befehl startet Blensor und führt das `main.py` script aus.
+Der folgende Befehl startet Blensor ohne GUI und führt das `main.py` Skript aus.
+Zum Debugging kann das -b Flag entfernt werden, dieses verhindert dass das Blensor GUI geöffnet wird.
 
 ```
-./Blender-x86_64.AppImage -P main.py
+./Blender-x86_64.AppImage -b -P main.py
 ```
 
 Dieses Script lädt das Objekt aus dem `scan_objects` Ordner und fügt es in der Blensor Szene ein. Das Objekt wird dann zufällig um alle drei Achsen rotiert und zufällig innerhalb des vorher definierten Bereichs verschoben. Nachdem das Objekt verschoben und rotiert wurde, wird der Scan durchgeführt.
@@ -78,13 +79,13 @@ Mehr Informationen über die Dateiformate sind im nächsten Abschnitt zu finden.
 
 ## **5. Datei Formate**
 
-<p>Für jeden Scan werden im `training_data/pointclouds` Ordner die folgenden beiden Dateien erzeugt:</p>
+<p>Für jeden Scan werden im neu erzeugten `training_data/pointclouds` Ordner die folgenden beiden Dateien erzeugt:</p>
 
     1. OBJNAME_XXXX.pcd          Enthält den simulierten Azure Kinect Scan.
 
     2. OBJNAME_noisy_XXXX.pcd    Enthält den simulierten Azure Kinect Scan mit überlagertem Rauschen.
 
-<p>Weiterhin wird für jeden Scan im 'training_data/labels' Ordner das zugehörige Ground-Truth-Label erzeugt:</p>
+<p>Weiterhin wird für jeden Scan im neu erzeugten 'training_data/labels' Ordner das zugehörige Ground-Truth-Label erzeugt:</p>
 
     1. OBJNAME_XXXX.txt          Enthält die Position sowie die Rotation des Objektes.
 
